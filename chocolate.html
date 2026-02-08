@@ -1,1 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Wifey 🍫</title>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Patrick+Hand&family=Permanent+Marker&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper-bg: #fdf6e3;
+            --ink-color: #2c3e50;
+            --marker-red: #e74c3c;
+            --tape-color: rgba(255, 255, 255, 0.4);
+            --shadow: 3px 3px 10px rgba(0,0,0,0.1);
+        }
 
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #f0e6d2;
+            /* Wood/Desk Texture Background */
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
+            font-family: 'Patrick Hand', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            color: var(--ink-color);
+        }
+
+        /* --- THE NOTEBOOK PAGE --- */
+        .page-container {
+            background: #fff;
+            width: 90%;
+            max-width: 800px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transform: rotate(-1deg);
+            margin: 40px 0;
+            border-radius: 5px;
+            /* Notebook Paper Lines */
+            background-image: linear-gradient(#e1e1e1 1px, transparent 1px);
+            background-size: 100% 30px;
+        }
+
+        /* Holes in the paper */
+        .page-container::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            border-left: 2px solid #ff9999; /* Red margin line */
+            height: 100%;
+        }
+
+        /* --- TITLE --- */
+        .handwritten-title {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2.5rem;
+            text-align: center;
+            color: var(--marker-red);
+            transform: rotate(-2deg);
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.05);
+            background: white;
+            display: inline-block;
+            padding: 10px 30px;
+            /* Wobbly Border */
+            border: 2px solid var(--marker-red);
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%) rotate(-2deg);
+            z-index: 10;
+        }
+
+        /* --- STICKY NOTE (Typewriter Text) --- */
+        .sticky-note {
+            background: #feff9c; /* Post-it Yellow */
+            padding: 25px;
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            transform: rotate(1deg);
+            font-family: 'Special Elite', cursive; /* Typewriter font */
+        }
+
+        /* Washi Tape Logic */
+        .tape {
+            position: absolute;
+            top: -15px; left: 50%;
+            transform: translateX(-50%) rotate(-1deg);
+            width: 130px; height: 35px;
+            background-color: rgba(255, 255, 255, 0.5);
+            /* Tape Pattern */
+            background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 5px, transparent 5px, transparent 10px);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        /* --- STICKER GRID --- */
+        .sticker-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding: 10px;
+            padding-left: 30px; /* Space for margin line */
+        }
+
+        .sticker-spot {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hidden Message (Writing on Paper) */
+        .paper-msg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1rem;
+            color: #555;
+            padding: 5px;
+            /* Dotted outline like a "place sticker here" zone */
+            border: 2px dashed #ccc;
+            border-radius: 15px;
+            box-sizing: border-box;
+            background: rgba(255,255,255,0.8);
+        }
+
+        /* The Sticker (Covering the message) */
+        .sticker {
+            position: absolute;
+            width: 110%; height: 110%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 3px 6px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            z-index: 5;
+            /* Hand-cut look */
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+            border: 3px solid white;
+        }
+
+        /* Sticker Variations */
+        .st-1 { background: #ff7675; transform: rotate(2deg); color: white; }
+        .st-2 { background: #74b9ff; transform: rotate(-3deg); color: white; }
+        .st-3 { background: #fdcb6e; transform: rotate(1deg); color: white; }
+        .st-4 { background: #55efc4; transform: rotate(-2deg); color: #2d3436; }
+        .st-5 { background: #e84393; transform: rotate(3deg); color: white; }
+        .st-6 { background: #a29bfe; transform: rotate(-1deg); color: white; }
+
+        .sticker:hover { transform: scale(1.05) rotate(0deg); z-index: 10; }
+
+        /* Peel Animation */
+        .sticker.peeled {
+            transform: translateY(100px) translateX(50px) rotate(45deg) scale(0.8);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 1s ease-in-out;
+        }
+
+        /* Action Buttons (Doodles) */
+        .doodle-btn {
+            background: none;
+            font-family: 'Permanent Marker', cursive;
+            color: var(--marker-red);
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            border: 2px solid var(--marker-red);
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .doodle-btn:hover { background: var(--marker-red); color: white; transform: scale(1.1) rotate(-3deg); }
+
+        .highlight-marker {
+            background: linear-gradient(120deg, rgba(253, 203, 110, 0.5) 0%, rgba(253, 203, 110, 0.5) 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 80%;
+            font-weight: bold;
+        }
+
+        /* --- FINAL REVEAL (POLAROID) --- */
+        .polaroid-reveal {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) rotate(10deg) scale(0.5);
+            background: white;
+            padding: 20px 20px 60px 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 100;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 90%;
+            max-width: 450px;
+        }
+
+        .polaroid-reveal.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) rotate(-3deg) scale(1);
+            pointer-events: all;
+        }
+
+        .polaroid-img {
+            width: 100%;
+            height: auto;
+            border: 1px solid #eee;
+            /* Vintage Filter */
+            filter: contrast(1.1) sepia(0.2); 
+            margin-bottom: 15px;
+        }
+
+        .polaroid-text {
+            font-family: 'Special Elite', cursive;
+            font-size: 0.9rem;
+            color: #2d3436;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .big-handwriting {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.4rem;
+            color: var(--marker-red);
+            display: block;
+            margin: 15px 0;
+            transform: rotate(-2deg);
+        }
+
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
+
+        @media (max-width: 600px) {
+            .page-container { width: 95%; padding: 20px; margin: 20px 0; }
+            .sticker-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; padding-left: 10px; }
+            .handwritten-title { font-size: 2rem; }
+            .sticky-note { font-size: 0.95rem; width: 90%; }
+            .sticker { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-container">
+        
+        <div class="handwritten-title">Life isn't always sweet...</div>
+        
+        <div class="sticky-note">
+            <div class="tape"></div>
+            <div id="typewriter-text"></div>
+        </div>
+
+        <div class="sticker-grid" id="sticker-box">
+            
+            <div class="sticker-spot">
+                <div class="paper-msg">
+                    I promise to be<br><span class="highlight-marker">Your Sweetness.</span>
+                </div>
+                <div class="sticker st-1" onclick="peel(this)">🍫</div>
+            </div>
+
+            <div class="sticker-spot">
+                <div class="paper-msg">
+                    Coupon:<br>Head Massage
+                    <a href="#" class="doodle-btn" onclick="wa('massage')">Redeem</a>
+                </div>
+                <div class="sticker st-2" onclick="peel(this)">💆‍♀️</div>
+            </div>
+
+            <div class="sticker-spot">
+                <div class="paper-msg">
+                    Pass:<br>"You Pick, I Pay"
+                    <a href="#" class="doodle-btn" onclick="wa('food')">Hungry!</a>
+                </div>
+                <div class="sticker st-3" onclick="peel(this)">🍕</div>
+            </div>
+
+            <div class="sticker-spot">
+                <div class="paper-msg">
+                    Pass:<br>Rant Session
+                    <a href="#" class="doodle-btn" onclick="wa('vent')">Vent</a>
+                </div>
+                <div class="sticker st-4" onclick="peel(this)">🗣️</div>
+            </div>
+
+            <div class="sticker-spot">
+                <div class="paper-msg">
+                    Warning:<br>Addicted to <span class="highlight-marker">YOU</span>
+                </div>
+                <div class="sticker st-5" onclick="peel(this)">🥰</div>
+            </div>
+
+            <div class="sticker-spot">
+                <div class="paper-msg">
+                    My Favorite<br>Flavor
+                </div>
+                <div class="sticker st-6" onclick="peel(this)">👑</div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="polaroid-reveal" id="final">
+        <div class="tape" style="top: -15px; left: 50%; transform: translateX(-50%) rotate(2deg); background: rgba(231, 76, 60, 0.5);"></div>
+        
+        <img src="us.png" alt="Us" class="polaroid-img">
+        
+        <div class="polaroid-text">
+            These chocolates? They last 10 minutes.<br>
+            But You? You are my <strong>FOREVER</strong>.
+        </div>
+
+        <div class="big-handwriting">
+            YOU ARE THE ONLY CRAVING I NEVER WANT TO QUIT.
+        </div>
+
+        <div class="polaroid-text" style="font-size: 0.8rem; border-top: 1px dashed #ccc; padding-top: 10px;">
+            Happy Chocolate Day, Reva. ❤️<br>
+            From someone addicted to YOU...
+        </div>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <script>
+        // --- CONFIGURATION ---
+        // REPLACE THIS WITH YOUR NUMBER
+        const phone = "917875778253"; 
+
+        // --- TYPEWRITER ---
+        const text = "...but I promise to take the bitter parts for myself, so you never have to taste them.\n\nI tried looking for the perfect one, but honestly? I already won the lottery with YOU.\n\nTap the stickers below 👇";
+        const typeBox = document.getElementById('typewriter-text');
+        let i = 0;
+        
+        function type() {
+            if(i < text.length) {
+                // Handle newlines
+                if(text.charAt(i) === '\n') {
+                    typeBox.innerHTML += '<br>';
+                } else {
+                    typeBox.innerHTML += text.charAt(i);
+                }
+                i++;
+                setTimeout(type, 35);
+            }
+        }
+        setTimeout(type, 800);
+
+        // --- PEEL LOGIC ---
+        let opened = 0;
+        function peel(el) {
+            if(!el.classList.contains('peeled')) {
+                el.classList.add('peeled');
+                opened++;
+                if(opened === 6) setTimeout(showFinal, 1000);
+            }
+        }
+
+        function wa(type) {
+            let msg = "";
+            if(type === 'massage') msg = "Hey Hubby! 💆‍♀️ I am redeeming my *Head Massage Coupon* right now! Get your hands ready!";
+            if(type === 'food') msg = "Emergency! 🍕 I am redeeming my *'You Pick, I Pay' Pass*. I'm hungry!";
+            if(type === 'vent') msg = "I need to talk. 🗣️ Redeeming my *Rant Session*. You just listen, okay?";
+            
+            // --- SAFARI FIX: Use location.href ---
+            window.location.href = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+        }
+
+        function showFinal() {
+            const p = document.getElementById('final');
+            p.classList.add('show');
+            startConfetti();
+        }
+
+        // --- PAPER CONFETTI ---
+        const canvas = document.getElementById("confetti-canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const pieces = [];
+        const colors = ['#e74c3c', '#f1c40f', '#3498db', '#00b894', '#6c5ce7'];
+
+        function startConfetti() {
+            for(let i=0; i<150; i++) {
+                pieces.push({
+                    x: Math.random()*canvas.width,
+                    y: Math.random()*canvas.height - canvas.height,
+                    rotation: Math.random()*360,
+                    color: colors[Math.floor(Math.random()*colors.length)],
+                    speed: Math.random()*4+2,
+                    size: Math.random()*10+5
+                });
+            }
+            animate();
+        }
+
+        function animate() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            pieces.forEach(p => {
+                p.y += p.speed;
+                p.rotation += 2;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                // Draw a rough square for paper look
+                ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                ctx.restore();
+            });
+            requestAnimationFrame(animate);
+        }
+        
+        // Mobile tap fix
+        document.addEventListener('touchstart', function() {}, {passive: true});
+    </script>
+</body>
+</html>
